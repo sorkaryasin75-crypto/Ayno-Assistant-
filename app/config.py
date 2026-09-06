@@ -1,20 +1,23 @@
-from pathlib import Path
+import os
+from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 class Settings(BaseSettings):
+    # Required field
     groq_api_key: str
-    groq_model: str = "llama-3.3-70b-versatile"
-    telegram_bot_token: str
-    telegram_chat_id: str
-    admin_password: str
-    port: int = 8000
 
+    # Optional fields with default values
+    port: int = 8080
+    telegram_chat_id: Optional[str] = None
+
+    # Settings configuration (reads from .env file if available)
     model_config = SettingsConfigDict(
-        env_file=BASE_DIR / ".env",
+        env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore"
+        extra="ignore"  # Ignore extra env variables not defined here
     )
 
+
+# Instantiate the settings object
 settings = Settings()
