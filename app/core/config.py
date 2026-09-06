@@ -1,13 +1,13 @@
 import os
-from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     # Groq API Configuration
     groq_api_key: str = os.getenv("GROQ_API_KEY", "")
 
-    # Telegram API Configuration
+    # Telegram Configuration
     telegram_bot_token: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    telegram_chat_id: str = os.getenv("TELEGRAM_CHAT_ID", "")
     
     # Environment Settings
     env: str = os.getenv("ENV", "development")
