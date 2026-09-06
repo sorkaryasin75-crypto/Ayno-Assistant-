@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayno Assistant</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ayno Assistant</h1>
+            <div id="status-badge" class="badge checking">Checking Status...</div>
+        </header>
+
+        <main>
+            <section class="card">
+                <h2>System Health</h2>
+                <ul class="system-metrics">
+                    <li><span>Groq API:</span> <strong id="groq-status">--</strong></li>
+                    <li><span>Telegram Bot:</span> <strong id="tg-status">--</strong></li>
+                    <li><span>Server Scheduler:</span> <strong id="scheduler-status">--</strong></li>
+                </ul>
+                <button id="refresh-btn" class="btn">Refresh Health Check</button>
+            </section>
+        </main>
+    </div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
