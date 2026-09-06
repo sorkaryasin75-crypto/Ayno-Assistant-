@@ -1,7 +1,7 @@
 import logging
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from app.core.groq_client import GroqService
-from app.core.telegram_client import TelegramService
+from .config import settings
+from .groq_client import GroqService
+from .telegram_client import TelegramService
 
 logger = logging.getLogger(__name__)
 
