@@ -1,6 +1,6 @@
 import logging
 from groq import AsyncGroq, GroqError
-from app.core.config import settings
+from .config import settings
 
 logger = logging.getLogger(__name__)
 
