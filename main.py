@@ -15,7 +15,7 @@ logger = logging.getLogger("AynoAssistant")
 # --- Environment Variables ---
 GROQ_API_KEY = os.getenv("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")
 TELEGRAM_BOT_TOKEN = os.getenv("8680178701:AAEdRETzMseHbOZuMmQFXpR9RemM-CQ8dl0")
-TELEGRAM_GROUP_ID = os.getenv("1002352180501")
+TELEGRAM_GROUP_ID = os.getenv("TELEGRAM_GROUP_ID")
 
 # ভ্যারিয়েবল চেকিং (ফেইল সেফ)
 if not all([GROQ_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_GROUP_ID]):
