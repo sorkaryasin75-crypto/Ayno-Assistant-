@@ -74,8 +74,8 @@ async def auto_send_messages():
         except Exception as e:
             print(f"[ERROR] অজানা সমস্যা: {e}")
             
-        # প্রতি কত সেকেন্ড পর পর মেসেজ পাঠাতে চান (এখানে ৬০ সেকেন্ড দেওয়া আছে)
-        await asyncio.sleep(60)
+        # প্রতি কত সেকেন্ড পর পর মেসেজ পাঠাতে চান (এখানে ৬৫ সেকেন্ড দেওয়া আছে)
+        await asyncio.sleep(65)
 
 # Lifespan ইভেন্ট (FastAPI সার্ভার চালু ও বন্ধ হওয়ার সময় রান করবে)
 @asynccontextmanager
