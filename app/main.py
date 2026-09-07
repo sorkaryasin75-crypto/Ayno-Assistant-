@@ -6,15 +6,15 @@ from telegram.error import TelegramError
 from groq import Groq
 
 # --- কনফিগারেশন ---
-BOT_TOKEN = "8680178701:AAEdRETzMseHbOZuMmQFXpR9RemM-CQ8dl0"  # টেলিগ্রাম বটের টোকেন
-CHAT_ID = "-1002352180501"                  # গ্রুপের আইডি (অবশ্যই মাইনাস সহ)
-GROQ_API_KEY = "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"      # আপনার Groq API Key
+BOT_TOKEN = "8680178701:AAEdRETzMseHbOZuMmQFXpR9RemM-CQ8dl0"  # আপনার বটের টোকেন দিন
+CHAT_ID = "-1002352180501"                  # আপনার গ্রুপের Chat ID দিন (মাইনাস সহ)
+GROQ_API_KEY = "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"      # আপনার Groq API Key দিন
 
 # ইনিশিয়ালাইজেশন
 bot = Bot(token=BOT_TOKEN)
 groq_client = Groq(api_key=GROQ_API_KEY)
 
-# Groq API দিয়ে Telegram Tips তৈরি করার ফংশন
+# Groq API দিয়ে Telegram Tips জেনারেট করার ফাংশন
 def generate_telegram_tip():
     prompt = (
         "Generate a short, extremely helpful Telegram tip or feature secret for users. "
@@ -27,7 +27,7 @@ def generate_telegram_tip():
             {"role": "system", "content": "You are a Telegram power-user expert providing daily short tips."},
             {"role": "user", "content": prompt}
         ],
-        model="llama-3.3-70b-versatile",
+        model="llama-3.1-8b-instant",  # কার্যকরী সঠিক মডেল নাম
         temperature=0.7,
         max_tokens=150
     )
@@ -37,25 +37,25 @@ def generate_telegram_tip():
 async def auto_send_ai_tips():
     while True:
         try:
-            # ১. Groq দিয়ে টিপস জেনারেট
+            # ১. Groq API থেকে টিপস জেনারেট
             tip_content = generate_telegram_tip()
             
             # ২. মেসেজের ফরম্যাট সাজানো
             full_message = f"💡 **Telegram Tip of the Day** 💡\n\n{tip_content}"
             
-            # ৩. গ্রুপে পাঠানো
+            # ৩. টেলিগ্রাম গ্রুপে পাঠানো
             await bot.send_message(chat_id=CHAT_ID, text=full_message, parse_mode="Markdown")
-            print("[SUCCESS] Groq AI থেকে টিপস তৈরি করে গ্রুপে পাঠানো হয়েছে।")
+            print("[SUCCESS] Groq AI থেকে টিপস তৈরি করে গ্রুপে সফলভাবে পাঠানো হয়েছে।")
             
         except TelegramError as e:
-            print(f"[ERROR] Telegram সমস্যা: {e}")
+            print(f"[ERROR] Telegram সার্ভিস এরর: {e}")
         except Exception as e:
             print(f"[ERROR] Groq API বা অন্যান্য সমস্যা: {e}")
             
-        # প্রতি কত সময় পর পর পাঠাবে (এখানে ৩৬০০ সেকেন্ড = ১ ঘণ্টা পরপর দেওয়া আছে)
+        # প্রতি ৩৬০০ সেকেন্ড (১ ঘণ্টা) পর পর মেসেজ পাঠাবে
         await asyncio.sleep(3600)
 
-# Lifespan ইভেন্ট
+# Lifespan ইভেন্ট (FastAPI সার্ভার স্টার্ট হলে অটো চালু হবে)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     task = asyncio.create_task(auto_send_ai_tips())
