@@ -1,29 +1,44 @@
+import asyncio
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from telegram import Bot
+from telegram.error import TelegramError
 
-app = FastAPI(title="My FastAPI App")
+# --- কনফিগারেশন ---
+BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN_HERE"  # আপনার বট টোকেন দিন
+CHAT_ID = "-100XXXXXXXXXX"  # আপনার টেলিগ্রাম গ্রুপের CHAT ID দিন (অবশ্যই মাইনাস সহ)
 
-# ১. সাধারণ JSON API এন্ডপয়েন্ট (REST API-র জন্য)
+bot = Bot(token=BOT_TOKEN)
+
+# অটোমেটিক মেসেজ পাঠানোর ব্যাকগ্রাউন্ড টাস্ক
+async def auto_send_messages():
+    while True:
+        try:
+            # গ্রুপে পাঠানো মেসেজের তথ্য
+            message_text = "🤖 এটি সিস্টেম থেকে পাঠানো অটোমেটিক মেসেজ!"
+            
+            await bot.send_message(chat_id=CHAT_ID, text=message_text)
+            print("[SUCCESS] গ্রুপে মেসেজ সফলভাবে পাঠানো হয়েছে।")
+            
+        except TelegramError as e:
+            print(f"[ERROR] মেসেজ পাঠাতে সমস্যা হয়েছে: {e}")
+        except Exception as e:
+            print(f"[ERROR] অজানা সমস্যা: {e}")
+            
+        # প্রতি কত সেকেন্ড পর পর মেসেজ পাঠাতে চান (এখানে ৬০ সেকেন্ড দেওয়া আছে)
+        await asyncio.sleep(60)
+
+# Lifespan ইভেন্ট (FastAPI সার্ভার চালু ও বন্ধ হওয়ার সময় রান করবে)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # সার্ভার চালু হওয়ার সাথে সাথে ব্যাকগ্রাউন্ড টাস্ক শুরু হবে
+    task = asyncio.create_task(auto_send_messages())
+    yield
+    # সার্ভার বন্ধ হলে টাস্ক ক্যানসেল হবে
+    task.cancel()
+
+app = FastAPI(title="Telegram Auto Notifier", lifespan=lifespan)
+
 @app.get("/")
-async def read_root():
-    return {
-        "status": "success",
-        "message": "সিস্টেমটি jinja2 ছাড়াই সফলভাবে চালু হয়েছে!"
-    }
-
-# ২. যদি কোনো পেজে HTML সরাসরি দেখাতে চান (অপশনাল)
-@app.get("/home", response_class=HTMLResponse)
-async def home_page():
-    return """
-    <!DOCTYPE html>
-    <html lang="bn">
-    <head>
-        <meta charset="UTF-8">
-        <title>হোম পেজ</title>
-    </head>
-    <body>
-        <h1>FastAPI সার্ভার সফলভাবে চলছে</h1>
-        <p>এটি jinja2 টেমপ্লেটিং ইঞ্জিন ছাড়াই রেন্ডার করা হয়েছে।</p>
-    </body>
-    </html>
-    """
+async def root():
+    return {"status": "running", "message": "Telegram Auto Notifier System Active"}
