@@ -27,7 +27,7 @@ def generate_telegram_tip():
             {"role": "system", "content": "You are a Telegram power-user expert providing daily short tips."},
             {"role": "user", "content": prompt}
         ],
-        model="llama3-8b-8192",  # সঠিক ও সক্রিয় মডেল
+        model="llama-3.1-8b-instant",  # সক্রিয় মডেল
         temperature=0.7,
         max_tokens=150
     )
@@ -41,7 +41,7 @@ async def auto_send_ai_tips():
             full_message = f"💡 **Telegram Tip of the Day** 💡\n\n{tip_content}"
             
             await bot.send_message(chat_id=CHAT_ID, text=full_message, parse_mode="Markdown")
-            print("[SUCCESS] Groq AI থেকে টিপস তৈরি করে গ্রুপে পাঠানো হয়েছে।")
+            print("[SUCCESS] Groq AI থেকে টিপস তৈরি করে গ্রুপে সফলভাবে পাঠানো হয়েছে।")
             
         except TelegramError as e:
             print(f"[ERROR] Telegram সমস্যা: {e}")
